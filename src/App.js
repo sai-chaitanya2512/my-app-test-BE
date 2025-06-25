@@ -2,15 +2,17 @@ import { ToastContainer } from 'react-toastify';
 import './App.css';
 import Loginform from './LoginForm/Loginform';
 import BoidBackground from './Background/BoidBackground';
-import AnimatedMouseBackground from './Mouse/MouseAnimation';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
-      <BoidBackground />
-      {/* <AnimatedMouseBackground/> */}
-      <Loginform />
-      <ToastContainer />
+      <BrowserRouter>
+        <BoidBackground />
+        <Route path="/login" element={<Loginform />} />
+        <Dashboard />
+        <ToastContainer />
+      </BrowserRouter>
     </div>
 
   );

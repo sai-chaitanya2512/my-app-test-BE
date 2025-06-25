@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Form, Input, Button, Card, Space, Divider, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { calc } from 'antd/es/theme/internal';
+import { useNavigate } from 'react-router-dom';
 
 // Login Form Component
 const Loginform = ({ onSwitchToRegister }) => {
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const onFinish = async (values) => {
         setLoading(true);
@@ -22,6 +23,8 @@ const Loginform = ({ onSwitchToRegister }) => {
                 toast.success(response.data.message, {
                     position: "top-right"
                 });
+
+                navigate("/dashboard");
 
                 return response;
             }
@@ -226,6 +229,13 @@ export default function AuthForms() {
     const [currentStep, setCurrentStep] = useState('login'); // 'login', 'register', or 'verify'
     const [email, setEmail] = useState('');
     const [userDetails, setUserDetails] = useState({});
+
+    useEffect(() => {
+        if (localStorage.getItem("auth-token")) {
+            navigate('/dashboard');
+        }
+    }, []);
+
 
     const handleRegistrationSuccess = async (userDetails) => {
         setEmail(userDetails.email);

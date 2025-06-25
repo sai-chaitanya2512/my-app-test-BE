@@ -1,3 +1,3 @@
-export const commonUrl = 'http://localhost:8005';
+export const commonUrl = 'https://my-app-test-be.onrender.com';
 
 
