@@ -4,6 +4,7 @@ import Loginform from './LoginForm/Loginform';
 import BoidBackground from './Background/BoidBackground';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Dashboard from './Dashboard/Dashboard';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
       <BrowserRouter>
         <BoidBackground />
         <Route path="/login" element={<Loginform />} />
-        <Dashboard />
+         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <ToastContainer />
       </BrowserRouter>
     </div>
