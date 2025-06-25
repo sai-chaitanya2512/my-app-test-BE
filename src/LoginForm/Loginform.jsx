@@ -230,6 +230,8 @@ export default function AuthForms() {
     const [email, setEmail] = useState('');
     const [userDetails, setUserDetails] = useState({});
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (localStorage.getItem("auth-token")) {
             navigate('/dashboard');
