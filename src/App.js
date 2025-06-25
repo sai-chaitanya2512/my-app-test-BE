@@ -3,6 +3,7 @@ import './App.css';
 import Loginform from './LoginForm/Loginform';
 import BoidBackground from './Background/BoidBackground';
 import { BrowserRouter, Route } from 'react-router-dom';
+import Dashboard from './Dashboard/Dashboard';
 
 function App() {
   return (
