@@ -5,16 +5,20 @@ import BoidBackground from './Background/BoidBackground';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Dashboard from './Dashboard/Dashboard';
 import PrivateRoute from './PrivateRoute';
+import { useState } from 'react';
 
 function App() {
+
+  const [userLoggedIn, setuserLoggedIn] = useState(localStorage.getItem("auth-token") !== null);
+
   return (
     <div className="App">
       <BrowserRouter>
-          <BoidBackground />
-          <ToastContainer />
+        {!userLoggedIn && <BoidBackground />}
+        <ToastContainer />
         <Routes>
-          <Route path="/login" element={<Loginform />} />
-          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/login" element={<Loginform setuserLoggedIn={setuserLoggedIn} />} />
+          <Route path="/" element={<PrivateRoute><Dashboard setuserLoggedIn={setuserLoggedIn} /></PrivateRoute>} />
         </Routes>
       </BrowserRouter>
     </div>
