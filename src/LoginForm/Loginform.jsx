@@ -4,6 +4,7 @@ import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import "./Loginform.css";
 
 // Login Form Component
 const Loginform = (props) => {
@@ -54,14 +55,7 @@ const Loginform = (props) => {
     return (
         <Card
             title={<span style={{ color: "white" }}>Login</span>}
-            style={{
-                width: 400,
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(5px)",
-                borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                border: "none",
-            }}
+            className="loginCardStyling"
         >
             <Form
                 name="login"
@@ -125,14 +119,7 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
     return (
         <Card
             title={<span style={{ color: "white" }}>Register</span>}
-            style={{
-                width: 400,
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(5px)",
-                borderRadius: "10px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                border: "none",
-            }}
+            className="loginCardStyling"
         >
             <Form name="register" onFinish={onFinish} layout="vertical">
                 <Form.Item
@@ -226,7 +213,10 @@ const OTPVerificationForm = ({ email, handleResendOTP, setCurrentStep }) => {
     };
 
     return (
-        <Card title="Verify Your Email" style={{ width: 400, margin: "0 auto" }}>
+        <Card
+            title={<span style={{ color: "white" }}>Verify Your Email</span>}
+            className="loginCardStyling"
+        >
             <p style={{ textAlign: "center", marginBottom: 24 }}>
                 We've sent a 6-digit code to {email}
             </p>
