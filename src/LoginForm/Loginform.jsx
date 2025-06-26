@@ -91,7 +91,7 @@ const Loginform = ({ onSwitchToRegister }) => {
             </Divider>
 
             <div style={{ textAlign: "center" }}>
-                <Button type="link" onClick={onSwitchToRegister}>
+                <Button type="link" onClick={()=>{onSwitchToRegister(true)}}>
                     Register now!
                 </Button>
             </div>
@@ -114,7 +114,16 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
     };
 
     return (
-        <Card title="Register" style={{ width: 400, margin: '0 auto' }}>
+        <Card 
+        title={<span style={{ color: "white" }}>Register</span>}
+            style={{
+                width: 400,
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                backdropFilter: "blur(5px)",
+                borderRadius: "10px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                border: "none",
+            }}>
             <Form
                 name="register"
                 onFinish={onFinish}
@@ -165,10 +174,10 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
                 </Form.Item>
             </Form>
 
-            <Divider plain>Or</Divider>
+            <Divider  plain style={{ color: "white", borderColor: "white" }}></Divider>
 
             <div style={{ textAlign: 'center' }}>
-                <Button type="link" onClick={onSwitchToLogin}>
+                <Button type="link" onClick={()=>{onSwitchToLogin(true)}}>
                     Already have an account? Login
                 </Button>
             </div>
@@ -305,7 +314,12 @@ export default function AuthForms() {
         }
     };
 
-    const switchToLogin = async () => {
+    const switchToLogin = async (noCall=false) => {
+
+        if(noCall){
+            setCurrentStep('login');
+            return;
+        }
 
         const obj = { email, password: userDetails.password }
         console.log(obj)
@@ -331,7 +345,12 @@ export default function AuthForms() {
         setCurrentStep('login');
     };
 
-    const switchToRegister = async () => {
+    const switchToRegister = async ( noCall=false) => {
+
+        if(noCall){
+            setCurrentStep('register');
+            return;
+        }
         const obj = { email, password: userDetails.password }
         console.log(obj)
         try {
