@@ -1,50 +1,54 @@
-import React, { use, useEffect, useState } from 'react';
-import { Form, Input, Button, Card, Space, Divider, message } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { use, useEffect, useState } from "react";
+import { Form, Input, Button, Card, Space, Divider, message } from "antd";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Login Form Component
-const Loginform = ({ onSwitchToRegister }) => {
+const Loginform = (props) => {
+    const { onSwitchToRegister, setuserLoggedIn } = props;
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const onFinish = async (values) => {
         setLoading(true);
-        console.log('Login attempt with:', values);
+        console.log("Login attempt with:", values);
         // Simulate API call
         try {
-            console.log(process.env.REACT_APP_API_URL)
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, values);
-            console.log('Login response:', response);
+            console.log(process.env.REACT_APP_API_URL);
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/login`,
+                values
+            );
+            console.log("Login response:", response);
             if (response.status === 200) {
                 localStorage.setItem("auth-token", response.data.token);
+                setuserLoggedIn(true);
                 toast.success(response.data.message, {
-                    position: "top-right"
+                    position: "top-right",
                 });
 
-                navigate("/dashboard");
+                navigate("/");
 
                 return response;
             }
         } catch (error) {
-            console.error('Error logging in:', error);
+            console.error("Error logging in:", error);
 
             // Check for known backend error
             if (error.response && error.response.data && error.response.data) {
                 toast.error(error.response.data, {
-                    position: "top-right"
+                    position: "top-right",
                 });
             } else {
                 toast.error("An unexpected error occurred", {
-                    position: "top-right"
+                    position: "top-right",
                 });
             }
         } finally {
             setLoading(false);
         }
-
     };
 
     return (
@@ -91,7 +95,12 @@ const Loginform = ({ onSwitchToRegister }) => {
             </Divider>
 
             <div style={{ textAlign: "center" }}>
-                <Button type="link" onClick={onSwitchToRegister}>
+                <Button
+                    type="link"
+                    onClick={() => {
+                        onSwitchToRegister(true);
+                    }}
+                >
                     Register now!
                 </Button>
             </div>
@@ -105,26 +114,32 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
 
     const onFinish = (values) => {
         setLoading(true);
-        console.log('Registration attempt with:', values);
+        console.log("Registration attempt with:", values);
         setTimeout(() => {
             setLoading(false);
-            message.success('Registration successful! Please verify your email.');
+            message.success("Registration successful! Please verify your email.");
             onRegisterSuccess(values);
         }, 1000);
     };
 
     return (
-        <Card title="Register" style={{ width: 400, margin: '0 auto' }}>
-            <Form
-                name="register"
-                onFinish={onFinish}
-                layout="vertical"
-            >
+        <Card
+            title={<span style={{ color: "white" }}>Register</span>}
+            style={{
+                width: 400,
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                backdropFilter: "blur(5px)",
+                borderRadius: "10px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                border: "none",
+            }}
+        >
+            <Form name="register" onFinish={onFinish} layout="vertical">
                 <Form.Item
                     name="email"
                     rules={[
-                        { required: true, message: 'Please input your email!' },
-                        { type: 'email', message: 'Please enter a valid email!' }
+                        { required: true, message: "Please input your email!" },
+                        { type: "email", message: "Please enter a valid email!" },
                     ]}
                 >
                     <Input prefix={<MailOutlined />} placeholder="Email" />
@@ -133,8 +148,8 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
                 <Form.Item
                     name="password"
                     rules={[
-                        { required: true, message: 'Please input your password!' },
-                        { min: 6, message: 'Password must be at least 6 characters!' }
+                        { required: true, message: "Please input your password!" },
+                        { min: 6, message: "Password must be at least 6 characters!" },
                     ]}
                 >
                     <Input.Password prefix={<LockOutlined />} placeholder="Password" />
@@ -142,20 +157,25 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
 
                 <Form.Item
                     name="confirmPassword"
-                    dependencies={['password']}
+                    dependencies={["password"]}
                     rules={[
-                        { required: true, message: 'Please confirm your password!' },
+                        { required: true, message: "Please confirm your password!" },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
-                                if (!value || getFieldValue('password') === value) {
+                                if (!value || getFieldValue("password") === value) {
                                     return Promise.resolve();
                                 }
-                                return Promise.reject(new Error('The two passwords do not match!'));
+                                return Promise.reject(
+                                    new Error("The two passwords do not match!")
+                                );
                             },
                         }),
                     ]}
                 >
-                    <Input.Password prefix={<LockOutlined />} placeholder="Confirm Password" />
+                    <Input.Password
+                        prefix={<LockOutlined />}
+                        placeholder="Confirm Password"
+                    />
                 </Form.Item>
 
                 <Form.Item>
@@ -165,10 +185,15 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
                 </Form.Item>
             </Form>
 
-            <Divider plain>Or</Divider>
+            <Divider plain style={{ color: "white", borderColor: "white" }}></Divider>
 
-            <div style={{ textAlign: 'center' }}>
-                <Button type="link" onClick={onSwitchToLogin}>
+            <div style={{ textAlign: "center" }}>
+                <Button
+                    type="link"
+                    onClick={() => {
+                        onSwitchToLogin(true);
+                    }}
+                >
                     Already have an account? Login
                 </Button>
             </div>
@@ -183,38 +208,38 @@ const OTPVerificationForm = ({ email, handleResendOTP, setCurrentStep }) => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/verifyOtp`, { email, otp: values.otp });
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/verifyOtp`,
+                { email, otp: values.otp }
+            );
             toast.success("OTP verified successfully! Please login", {
-                position: "top-right"
+                position: "top-right",
             });
-            setCurrentStep('login');
+            setCurrentStep("login");
             return response.data;
         } catch (error) {
-            console.error('Error verifying OTP:', error);
+            console.error("Error verifying OTP:", error);
             toast.error("Failed to verify OTP. Please try again!", {
-                position: "top-right"
+                position: "top-right",
             });
         }
     };
 
-
     return (
-        <Card title="Verify Your Email" style={{ width: 400, margin: '0 auto' }}>
-            <p style={{ textAlign: 'center', marginBottom: 24 }}>
+        <Card title="Verify Your Email" style={{ width: 400, margin: "0 auto" }}>
+            <p style={{ textAlign: "center", marginBottom: 24 }}>
                 We've sent a 6-digit code to {email}
             </p>
 
-            <Form
-                name="otpVerification"
-                onFinish={onFinish}
-                layout="vertical"
-            >
-
+            <Form name="otpVerification" onFinish={onFinish} layout="vertical">
                 <Form.Item
                     name="otp"
                     rules={[
-                        { required: true, message: 'Please input the verification code!' },
-                        { pattern: /^.{6}$/, message: 'Please enter a valid 6-character code!' }
+                        { required: true, message: "Please input the verification code!" },
+                        {
+                            pattern: /^.{6}$/,
+                            message: "Please enter a valid 6-character code!",
+                        },
                     ]}
                 >
                     <Input placeholder="Enter 6-digit code" maxLength={6} />
@@ -227,7 +252,7 @@ const OTPVerificationForm = ({ email, handleResendOTP, setCurrentStep }) => {
                 </Form.Item>
             </Form>
 
-            <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <div style={{ textAlign: "center", marginTop: 16 }}>
                 <Button type="link" onClick={handleResendOTP}>
                     Resend Code
                 </Button>
@@ -237,147 +262,161 @@ const OTPVerificationForm = ({ email, handleResendOTP, setCurrentStep }) => {
 };
 
 // Main component to handle authentication flow
-export default function AuthForms() {
-    const [currentStep, setCurrentStep] = useState('login'); // 'login', 'register', or 'verify'
-    const [email, setEmail] = useState('');
+export default function AuthForms(props) {
+    const { setuserLoggedIn } = props;
+    const [currentStep, setCurrentStep] = useState("login"); // 'login', 'register', or 'verify'
+    const [email, setEmail] = useState("");
     const [userDetails, setUserDetails] = useState({});
-
     const navigate = useNavigate();
 
     useEffect(() => {
         if (localStorage.getItem("auth-token")) {
-            navigate('/dashboard');
+            navigate("/");
         }
     }, []);
-
 
     const handleRegistrationSuccess = async (userDetails) => {
         setEmail(userDetails.email);
         setUserDetails(userDetails);
 
-        const obj = { email, password: userDetails.password }
+        const obj = { email, password: userDetails.password };
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/sendmail`, obj, {
-                headers: {
-                    'Content-Type': 'application/json'
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/sendmail`,
+                obj,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
-            });
+            );
 
             if (response.status === 200) {
-                setCurrentStep('verify');
+                setCurrentStep("verify");
                 toast.success("OTP sent successfully!", {
-                    position: "top-right"
+                    position: "top-right",
                 });
                 return response;
             }
-
         } catch (error) {
-            console.error('Error fetching OTP:', error);
+            console.error("Error fetching OTP:", error);
             toast.error("Failed to fetch OTP. Please try again!", {
-                position: "top-right"
+                position: "top-right",
             });
         }
     };
 
     const handleResendOTP = async () => {
         try {
-            const obj = { email, password: userDetails.password }
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/sendmail`, obj, {
-                headers: {
-                    'Content-Type': 'application/json'
+            const obj = { email, password: userDetails.password };
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/sendmail`,
+                obj,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
-            });
+            );
 
-
-            console.log(obj, "obj")
+            console.log(obj, "obj");
             if (response.data.status === 200) {
                 toast.success("OTP sent successfully!", {
-                    position: "top-right"
+                    position: "top-right",
                 });
             }
             return response.data;
         } catch (error) {
-            console.error('Error fetching OTP:', error);
+            console.error("Error fetching OTP:", error);
             toast.error("Failed to fetch OTP. Please try again!", {
-                position: "top-right"
+                position: "top-right",
             });
         }
     };
 
-    const switchToLogin = async () => {
+    const switchToLogin = async (noCall = false) => {
+        if (noCall) {
+            setCurrentStep("login");
+            return;
+        }
 
-        const obj = { email, password: userDetails.password }
-        console.log(obj)
+        const obj = { email, password: userDetails.password };
+        console.log(obj);
         try {
-
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, obj, {
-                headers: {
-                    'Content-Type': 'application/json'
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/login`,
+                obj,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
-            });
+            );
             if (response.status === 200) {
                 localStorage.setItem("auth-token", response.data.token);
                 toast.success(response.data.message, {
-                    position: "top-right"
+                    position: "top-right",
                 });
-                setCurrentStep('verify');
+                setCurrentStep("verify");
             }
-
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
 
-        setCurrentStep('login');
+        setCurrentStep("login");
     };
 
-    const switchToRegister = async () => {
-        const obj = { email, password: userDetails.password }
-        console.log(obj)
+    const switchToRegister = async (noCall = false) => {
+        if (noCall) {
+            setCurrentStep("register");
+            return;
+        }
+        const obj = { email, password: userDetails.password };
+        console.log(obj);
         try {
-
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/sendmail`, obj, {
-                headers: {
-                    'Content-Type': 'application/json'
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/sendmail`,
+                obj,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
-            });
+            );
             if (response.data.status === 200) {
-                setCurrentStep('verify');
+                setCurrentStep("verify");
             }
-
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
 
-
-
-        setCurrentStep('register');
-
+        setCurrentStep("register");
     };
 
     return (
         <div
             style={{
-                position: 'absolute',
-                top: '45%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '400px',
+                position: "absolute",
+                top: "45%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "400px",
             }}
         >
-            <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                {currentStep === 'login' && (
-                    <Loginform onSwitchToRegister={switchToRegister} />
+            <Space direction="vertical" size="large" style={{ width: "100%" }}>
+                {currentStep === "login" && (
+                    <Loginform onSwitchToRegister={switchToRegister} setuserLoggedIn={setuserLoggedIn} />
                 )}
 
-                {currentStep === 'register' && (
+                {currentStep === "register" && (
                     <RegistrationForm
                         onSwitchToLogin={switchToLogin}
                         onRegisterSuccess={handleRegistrationSuccess}
                     />
                 )}
 
-                {currentStep === 'verify' && (
+                {currentStep === "verify" && (
                     <OTPVerificationForm
                         setCurrentStep={setCurrentStep}
                         email={email}
@@ -386,6 +425,5 @@ export default function AuthForms() {
                 )}
             </Space>
         </div>
-
     );
 }

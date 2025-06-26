@@ -8,13 +8,13 @@ const Dashboard = () => {
 
     const logOut = () => {
         localStorage.removeItem("auth-token");
+        setuserLoggedIn(false);
         navigate("/login");
     }
 
   return (
     <div>
         <h1>Dashboard</h1>
-        {/* logout button */}
         <Button onClick={logOut}>Logout</Button>
     </div>
   )
