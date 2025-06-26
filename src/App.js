@@ -10,11 +10,11 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
           <BoidBackground />
-          <Route path="/login" element={<Loginform />} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <ToastContainer />
+        <Routes>
+          <Route path="/login" element={<Loginform />} />
+          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

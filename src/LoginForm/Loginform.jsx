@@ -48,7 +48,17 @@ const Loginform = ({ onSwitchToRegister }) => {
     };
 
     return (
-        <Card title="Login" style={{ width: 400, margin: '0 auto' }}>
+        <Card
+            title={<span style={{ color: "white" }}>Login</span>}
+            style={{
+                width: 400,
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                backdropFilter: "blur(5px)",
+                borderRadius: "10px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                border: "none",
+            }}
+        >
             <Form
                 name="login"
                 initialValues={{ remember: true }}
@@ -57,14 +67,14 @@ const Loginform = ({ onSwitchToRegister }) => {
             >
                 <Form.Item
                     name="email"
-                    rules={[{ required: true, message: 'Please input your email!' }]}
+                    rules={[{ required: true, message: "Please input your email!" }]}
                 >
                     <Input prefix={<UserOutlined />} placeholder="Email" />
                 </Form.Item>
 
                 <Form.Item
                     name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
+                    rules={[{ required: true, message: "Please input your password!" }]}
                 >
                     <Input.Password prefix={<LockOutlined />} placeholder="Password" />
                 </Form.Item>
@@ -76,9 +86,11 @@ const Loginform = ({ onSwitchToRegister }) => {
                 </Form.Item>
             </Form>
 
-            <Divider plain>Or</Divider>
+            <Divider plain style={{ color: "white", borderColor: "white" }}>
+                Or
+            </Divider>
 
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: "center" }}>
                 <Button type="link" onClick={onSwitchToRegister}>
                     Register now!
                 </Button>
