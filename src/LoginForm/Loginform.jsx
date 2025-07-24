@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import { Form, Input, Button, Card, Space, Divider, message } from "antd";
+import { Form, Input, Button, Card, Space, Divider, message, Spin } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -53,52 +53,55 @@ const Loginform = (props) => {
     };
 
     return (
-        <Card
-            title={<span style={{ color: "white" }}>Login</span>}
-            className="loginCardStyling"
-        >
-            <Form
-                name="login"
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                layout="vertical"
+        <Spin loading={loading}>
+            <Card
+                title={<span style={{ color: "white" }}>Login</span>}
+                className="loginCardStyling"
             >
-                <Form.Item
-                    name="email"
-                    rules={[{ required: true, message: "Please input your email!" }]}
+                <Form
+                    name="login"
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    layout="vertical"
                 >
-                    <Input prefix={<UserOutlined />} placeholder="Email" />
-                </Form.Item>
+                    <Form.Item
+                        name="email"
+                        rules={[{ required: true, message: "Please input your email!" }]}
+                    >
+                        <Input prefix={<UserOutlined />} placeholder="Email" />
+                    </Form.Item>
 
-                <Form.Item
-                    name="password"
-                    rules={[{ required: true, message: "Please input your password!" }]}
-                >
-                    <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                </Form.Item>
+                    <Form.Item
+                        name="password"
+                        rules={[{ required: true, message: "Please input your password!" }]}
+                    >
+                        <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+                    </Form.Item>
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loading} block>
-                        Log in
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading} block>
+                            Log in
+                        </Button>
+                    </Form.Item>
+                </Form>
+
+                <Divider plain style={{ color: "white", borderColor: "white" }}>
+                    Or
+                </Divider>
+
+                <div style={{ textAlign: "center" }}>
+                    <Button
+                        type="link"
+                        onClick={() => {
+                            onSwitchToRegister(true);
+                        }}
+                    >
+                        Register now!
                     </Button>
-                </Form.Item>
-            </Form>
+                </div>
+            </Card>
+        </Spin>
 
-            <Divider plain style={{ color: "white", borderColor: "white" }}>
-                Or
-            </Divider>
-
-            <div style={{ textAlign: "center" }}>
-                <Button
-                    type="link"
-                    onClick={() => {
-                        onSwitchToRegister(true);
-                    }}
-                >
-                    Register now!
-                </Button>
-            </div>
-        </Card>
     );
 };
 

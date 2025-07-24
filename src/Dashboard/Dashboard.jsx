@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import Hyperspeed from "../Background/Hyperspeed";
+// import Hyperspeed from "../Background/Hyperspeed";
 import "../Most.scss";
 
 const Dashboard = (props) => {
@@ -11,7 +11,7 @@ const Dashboard = (props) => {
   const logOut = () => {
     localStorage.removeItem("auth-token");
     setuserLoggedIn(false);
-    navigate("/login");
+    navigate("/");
   }
 
   const menubar = () => {
@@ -42,7 +42,7 @@ const Dashboard = (props) => {
 
   return (
       <div className="whole-body">
-      <Hyperspeed />
+      {/* <Hyperspeed /> */}
 
         {menubar()}
 
