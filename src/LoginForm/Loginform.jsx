@@ -1,10 +1,11 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { Form, Input, Button, Card, Space, Divider, message, Spin } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "./Loginform.css";
+import { SpinningContext } from "../Contexts/SpinningContext";
 
 // Login Form Component
 const Loginform = (props) => {
@@ -14,6 +15,7 @@ const Loginform = (props) => {
 
     const onFinish = async (values) => {
         setLoading(true);
+        setSpinning(true);
         console.log("Login attempt with:", values);
         // Simulate API call
         try {
@@ -49,59 +51,57 @@ const Loginform = (props) => {
             }
         } finally {
             setLoading(false);
+            setSpinning(false);
         }
     };
 
     return (
-        <Spin loading={loading}>
-            <Card
-                title={<span style={{ color: "white" }}>Login</span>}
-                className="loginCardStyling"
+        <Card
+            title={<span style={{ color: "white" }}>Login</span>}
+            className="loginCardStyling"
+        >
+            <Form
+                name="login"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                layout="vertical"
             >
-                <Form
-                    name="login"
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    layout="vertical"
+                <Form.Item
+                    name="email"
+                    rules={[{ required: true, message: "Please input your email!" }]}
                 >
-                    <Form.Item
-                        name="email"
-                        rules={[{ required: true, message: "Please input your email!" }]}
-                    >
-                        <Input prefix={<UserOutlined />} placeholder="Email" />
-                    </Form.Item>
+                    <Input prefix={<UserOutlined />} placeholder="Email" />
+                </Form.Item>
 
-                    <Form.Item
-                        name="password"
-                        rules={[{ required: true, message: "Please input your password!" }]}
-                    >
-                        <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                    </Form.Item>
+                <Form.Item
+                    name="password"
+                    rules={[{ required: true, message: "Please input your password!" }]}
+                >
+                    <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+                </Form.Item>
 
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={loading} block>
-                            Log in
-                        </Button>
-                    </Form.Item>
-                </Form>
-
-                <Divider plain style={{ color: "white", borderColor: "white" }}>
-                    Or
-                </Divider>
-
-                <div style={{ textAlign: "center" }}>
-                    <Button
-                        type="link"
-                        onClick={() => {
-                            onSwitchToRegister(true);
-                        }}
-                    >
-                        Register now!
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading} block>
+                        Log in
                     </Button>
-                </div>
-            </Card>
-        </Spin>
+                </Form.Item>
+            </Form>
 
+            <Divider plain style={{ color: "white", borderColor: "white" }}>
+                Or
+            </Divider>
+
+            <div style={{ textAlign: "center" }}>
+                <Button
+                    type="link"
+                    onClick={() => {
+                        onSwitchToRegister(true);
+                    }}
+                >
+                    Register now!
+                </Button>
+            </div>
+        </Card>
     );
 };
 
@@ -111,9 +111,11 @@ const RegistrationForm = ({ onSwitchToLogin, onRegisterSuccess }) => {
 
     const onFinish = (values) => {
         setLoading(true);
+        setSpinning(true);
         console.log("Registration attempt with:", values);
         setTimeout(() => {
             setLoading(false);
+            setSpinning(false);
             message.success("Registration successful! Please verify your email.");
             onRegisterSuccess(values);
         }, 1000);
@@ -197,6 +199,7 @@ const OTPVerificationForm = ({ email, handleResendOTP, setCurrentStep }) => {
 
     const onFinish = async (values) => {
         setLoading(true);
+        setSpinning(true);
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/verifyOtp`,
@@ -256,11 +259,13 @@ const OTPVerificationForm = ({ email, handleResendOTP, setCurrentStep }) => {
 
 // Main component to handle authentication flow
 export default function AuthForms(props) {
+    const SpinninContext = useContext(SpinningContext);
     const { setuserLoggedIn } = props;
     const [currentStep, setCurrentStep] = useState("login"); // 'login', 'register', or 'verify'
     const [email, setEmail] = useState("");
     const [userDetails, setUserDetails] = useState({});
     const navigate = useNavigate();
+    const { setSpinning } = SpinninContext;
 
     useEffect(() => {
         if (localStorage.getItem("auth-token")) {
@@ -399,13 +404,14 @@ export default function AuthForms(props) {
         >
             <Space direction="vertical" size="large" style={{ width: "100%" }}>
                 {currentStep === "login" && (
-                    <Loginform onSwitchToRegister={switchToRegister} setuserLoggedIn={setuserLoggedIn} />
+                    <Loginform onSwitchToRegister={switchToRegister} setuserLoggedIn={setuserLoggedIn} setSpinning={setSpinning} />
                 )}
 
                 {currentStep === "register" && (
                     <RegistrationForm
                         onSwitchToLogin={switchToLogin}
                         onRegisterSuccess={handleRegistrationSuccess}
+                        setSpinning={setSpinning}
                     />
                 )}
 
@@ -414,6 +420,7 @@ export default function AuthForms(props) {
                         setCurrentStep={setCurrentStep}
                         email={email}
                         handleResendOTP={handleResendOTP}
+                        setSpinning={setSpinning}
                     />
                 )}
             </Space>

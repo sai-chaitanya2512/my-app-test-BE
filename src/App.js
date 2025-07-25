@@ -8,6 +8,8 @@ import BoidBackground from './LoginBackground/BoidBackground';
 import Dashboard from './Dashboard/Dashboard';
 import PrivateRoute from './PrivateRoute';
 import Dashboard_v2 from './Dashboard/Dashboard_v2';
+import "./Most.scss";
+import { SpinningProvider } from './Contexts/SpinningContext';
 
 // import Home from './Pages/Home';
 // import About from './Pages/About';
@@ -24,6 +26,8 @@ function App() {
 
   return (
     <div className="App">
+      <SpinningProvider>
+
       <BrowserRouter>
         {!userLoggedIn && <BoidBackground />}
         <ToastContainer />
@@ -39,12 +43,13 @@ function App() {
             path="*"
             element={
               userLoggedIn
-                ? <Navigate to="/" replace />
-                : <Navigate to="/login" replace />
+              ? <Navigate to="/" replace />
+              : <Navigate to="/login" replace />
             }
-          />
+            />
         </Routes>
       </BrowserRouter>
+            </SpinningProvider>
     </div>
   );
 }
